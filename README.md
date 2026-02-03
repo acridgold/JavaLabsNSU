@@ -1,2 +1,3 @@
 # JavaLabsNSU
-Second course NSU IT-Dep OOP Java Labs
+## Done:
+- Nothing :)
