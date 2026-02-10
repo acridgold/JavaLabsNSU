@@ -1,10 +1,7 @@
 package ru.nsu;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -56,11 +53,9 @@ public class Main {
         try (Writer writer = new FileWriter("output.csv")) {
             writer.write("Word, Freq, Percent\n");
 
-            // Сортируем по частоте
-            List<Map.Entry<String, Integer>> sortedEntries = wordMap.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                    .toList();
+            List<Map.Entry<String, Integer>> sortedEntries = new ArrayList<>(wordMap.entrySet());
+
+            sortedEntries.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
 
             for (Map.Entry<String, Integer> entry : sortedEntries) {
                 double percentage = (double) entry.getValue() / totalWords * 100;
