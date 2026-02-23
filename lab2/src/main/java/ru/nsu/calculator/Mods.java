@@ -81,7 +81,6 @@ public class Mods {
             }
             double b = context.pop();
             if (context.stackIsEmpty()) {
-                // Возвращаем b обратно для сохранения консистентности
                 context.push(b);
                 throw new IllegalStateException("Недостаточно элементов на стеке");
             }

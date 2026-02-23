@@ -1,8 +1,8 @@
 package ru.nsu.calculator;
 
-import java.util.Stack;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 /**
  * Описывает хранилища функций
@@ -45,5 +45,9 @@ public class Context {
 
     public Double getParameter(String name) {
         return parameters.get(name);
+    }
+
+    public int stackSize() {
+        return stack.size();
     }
 }
