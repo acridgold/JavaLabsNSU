@@ -1,7 +1,0 @@
--classpath 'D:\\NSU\\MyLabs\\Java\\JavaLabsNSU\\lab0\\build\\classes\\java\\main;D:\\NSU\\MyLabs\\Java\\JavaLabsNSU\\lab0\\build\\resources\\main'
--d 'D:\\NSU\\MyLabs\\Java\\JavaLabsNSU\\lab0\\build\\docs\\javadoc'
--doctitle 'lab0 1.0-SNAPSHOT API'
--notimestamp 
--quiet 
--windowtitle 'lab0 1.0-SNAPSHOT API'
-'D:\\NSU\\MyLabs\\Java\\JavaLabsNSU\\lab0\\src\\main\\java\\ru\\nsu\\Main.java'
