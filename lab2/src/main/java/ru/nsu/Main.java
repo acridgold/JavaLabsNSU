@@ -1,6 +1,8 @@
 package ru.nsu;
 
-import ru.nsu.calculator.*;
+import ru.nsu.calculator.Calculator;
+import ru.nsu.calculator.CalculatorExceptions.*; // Импортируем наши классы исключений
+
 import java.io.IOException;
 
 public class Main {
@@ -18,10 +20,14 @@ public class Main {
         } catch (IOException e) {
             System.err.println("Ошибка при чтении файла '" + filename + "': " + e.getMessage());
             System.exit(1);
-        } catch (Exception e) {
+        } catch (CommandExecutionException e) {
             System.err.println("Ошибка выполнения: " + e.getMessage());
+            System.exit(2);
+        } catch (CalculatorException e) {
+            System.err.println("Ошибка калькулятора: " + e.getMessage());
             System.exit(1);
         }
+
         System.exit(0);
     }
 }

@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-/**
- * Описывает хранилища функций
- */
 public class Context {
     private final Stack<Double> stack = new Stack<>();
     private final Map<String, Double> parameters = new HashMap<>();

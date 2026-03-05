@@ -1,16 +1,12 @@
 package ru.nsu.calculator;
 
-/**
- * Описывает логику работы функций
- */
+import static ru.nsu.calculator.CalculatorExceptions.*;
+
 public class Mods {
 
     public static class PUSH implements Command {
         private final double value;
-
-        public PUSH(double value) {
-            this.value = value;
-        }
+        public PUSH(double value) { this.value = value; }
 
         @Override
         public void execute(Context context) {
@@ -22,7 +18,7 @@ public class Mods {
         @Override
         public void execute(Context context) {
             if (context.stackIsEmpty()) {
-                throw new IllegalStateException("Стек пуст");
+                throw new InsufficientStackElementsException("POP");
             }
             context.pop();
         }
@@ -32,11 +28,12 @@ public class Mods {
         @Override
         public void execute(Context context) {
             if (context.stackIsEmpty()) {
-                throw new IllegalStateException("Стек пуст");
+                throw new InsufficientStackElementsException("SQRT");
             }
             double value = context.pop();
             if (value < 0) {
-                throw new IllegalArgumentException("Нельзя взять корень из отрицательного числа");
+                context.push(value);
+                throw new NegativeSqrtException("SQRT");
             }
             context.push(Math.sqrt(value));
         }
@@ -45,11 +42,7 @@ public class Mods {
     public static class DEFINE implements Command {
         private final String name;
         private final double value;
-
-        public DEFINE(String name, double value) {
-            this.name = name;
-            this.value = value;
-        }
+        public DEFINE(String name, double value) { this.name = name; this.value = value; }
 
         @Override
         public void execute(Context context) {
@@ -61,7 +54,7 @@ public class Mods {
         @Override
         public void execute(Context context) {
             if (context.stackIsEmpty()) {
-                throw new IllegalStateException("Стек пуст");
+                throw new InsufficientStackElementsException("PRINT");
             }
             System.out.println(context.peek());
         }
@@ -69,46 +62,34 @@ public class Mods {
 
     public static class Simple_Math implements Command {
         private final char operation;
-
-        public Simple_Math(char operation) {
-            this.operation = operation;
-        }
+        public Simple_Math(char operation) { this.operation = operation; }
 
         @Override
         public void execute(Context context) {
-            if (context.stackIsEmpty()) {
-                throw new IllegalStateException("Стек пуст");
+            if (context.stackSize() < 2) {
+                throw new InsufficientStackElementsException(String.valueOf(operation));
             }
+
             double b = context.pop();
-            if (context.stackIsEmpty()) {
-                context.push(b);
-                throw new IllegalStateException("Недостаточно элементов на стеке");
-            }
             double a = context.pop();
 
             double result;
             switch (operation) {
-                case '+':
-                    result = a + b;
-                    break;
-                case '-':
-                    result = a - b;
-                    break;
-                case '*':
-                    result = a * b;
-                    break;
+                case '+': result = a + b; break;
+                case '-': result = a - b; break;
+                case '*': result = a * b; break;
                 case '/':
                     if (b == 0) {
                         context.push(a);
                         context.push(b);
-                        throw new ArithmeticException("Деление на ноль");
+                        throw new DivisionByZeroException("/");
                     }
                     result = a / b;
                     break;
                 default:
                     context.push(a);
                     context.push(b);
-                    throw new IllegalArgumentException("Неизвестная операция: " + operation);
+                    throw new UnknownCommandException(String.valueOf(operation));
             }
             context.push(result);
         }
