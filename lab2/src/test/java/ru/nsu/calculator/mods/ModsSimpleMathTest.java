@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.nsu.calculator.CalculatorExceptions.*;
 
 @DisplayName("Тесты для математических операций (+, -, *, /)")
 class ModsSimpleMathTest {
@@ -30,10 +31,19 @@ class ModsSimpleMathTest {
         context.push(a);
         context.push(b);
 
-        Mods.Simple_Math math = new Mods.Simple_Math(operation);
-        math.execute(context);
+        getCommand(operation).execute(context);
 
         assertEquals(expected, context.pop());
+    }
+
+    private Command getCommand(char operation) {
+        switch (operation) {
+            case '+': return new Add();
+            case '-': return new Subtract();
+            case '*': return new Multiply();
+            case '/': return new Divide();
+            default: throw new IllegalArgumentException("Неизвестная операция: " + operation);
+        }
     }
 
     @Test
@@ -42,8 +52,7 @@ class ModsSimpleMathTest {
         context.push(-5.0);
         context.push(3.0);
 
-        Mods.Simple_Math add = new Mods.Simple_Math('+');
-        add.execute(context);
+        new Add().execute(context);
 
         assertEquals(-2.0, context.pop());
     }
@@ -54,8 +63,7 @@ class ModsSimpleMathTest {
         context.push(10.0);
         context.push(0.0);
 
-        Mods.Simple_Math multiply = new Mods.Simple_Math('*');
-        multiply.execute(context);
+        new Multiply().execute(context);
 
         assertEquals(0.0, context.pop());
     }
@@ -66,10 +74,10 @@ class ModsSimpleMathTest {
         context.push(10.0);
         context.push(0.0);
 
-        Mods.Simple_Math divide = new Mods.Simple_Math('/');
+        Divide divide = new Divide();
 
-        ArithmeticException exception = assertThrows(
-                ArithmeticException.class,
+        DivisionByZeroException exception = assertThrows(
+                DivisionByZeroException.class,
                 () -> divide.execute(context)
         );
         assertEquals("Деление на ноль", exception.getMessage());
@@ -85,10 +93,10 @@ class ModsSimpleMathTest {
     void testOperationWithOneArgument() {
         context.push(5.0); // только один аргумент
 
-        Mods.Simple_Math add = new Mods.Simple_Math('+');
+        Add add = new Add();
 
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
+        InsufficientStackElementsException exception = assertThrows(
+                InsufficientStackElementsException.class,
                 () -> add.execute(context)
         );
         assertEquals("Недостаточно элементов на стеке", exception.getMessage());
@@ -101,33 +109,13 @@ class ModsSimpleMathTest {
     @Test
     @DisplayName("Операция на пустом стеке кидает исключение")
     void testOperationOnEmptyStack() {
-        Mods.Simple_Math add = new Mods.Simple_Math('+');
+        Add add = new Add();
 
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
+        InsufficientStackElementsException exception = assertThrows(
+                InsufficientStackElementsException.class,
                 () -> add.execute(context)
         );
-        assertEquals("Стек пуст", exception.getMessage());
-    }
-
-    @Test
-    @DisplayName("Неизвестная операция кидает исключение")
-    void testUnknownOperation() {
-        context.push(5.0);
-        context.push(3.0);
-
-        Mods.Simple_Math unknown = new Mods.Simple_Math('%');
-
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> unknown.execute(context)
-        );
-        assertEquals("Неизвестная операция: %", exception.getMessage());
-
-        // Проверяем, что стек восстановлен
-        assertEquals(2, context.stackSize());
-        assertEquals(3.0, context.pop());
-        assertEquals(5.0, context.pop());
+        assertEquals("Недостаточно элементов на стеке", exception.getMessage());
     }
 
     @Test
@@ -136,10 +124,10 @@ class ModsSimpleMathTest {
         // (5 + 3) * 2 = 16
         context.push(5.0);
         context.push(3.0);
-        new Mods.Simple_Math('+').execute(context); // стек: [8]
+        new Add().execute(context); // стек: [8]
 
         context.push(2.0);
-        new Mods.Simple_Math('*').execute(context); // стек: [16]
+        new Multiply().execute(context); // стек: [16]
 
         assertEquals(16.0, context.pop());
     }

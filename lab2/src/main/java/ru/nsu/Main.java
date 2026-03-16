@@ -1,7 +1,7 @@
 package ru.nsu;
 
 import ru.nsu.calculator.Calculator;
-import ru.nsu.calculator.CalculatorExceptions.*; // Импортируем наши классы исключений
+import ru.nsu.calculator.CalculatorExceptions.*;
 
 import java.io.IOException;
 

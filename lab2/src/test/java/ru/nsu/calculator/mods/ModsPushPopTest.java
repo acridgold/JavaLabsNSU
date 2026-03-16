@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.nsu.calculator.CalculatorExceptions.*;
 
 @DisplayName("Тесты для команд PUSH и POP")
 class ModsPushPopTest {
@@ -19,7 +20,7 @@ class ModsPushPopTest {
     @Test
     @DisplayName("PUSH кладет число на стек")
     void testPush() {
-        Mods.PUSH push = new Mods.PUSH(5.0);
+        Push push = new Push(5.0);
         push.execute(context);
 
         assertEquals(1, context.stackSize());
@@ -29,9 +30,9 @@ class ModsPushPopTest {
     @Test
     @DisplayName("Несколько PUSH кладут числа в правильном порядке")
     void testMultiplePushes() {
-        Mods.PUSH push1 = new Mods.PUSH(1.0);
-        Mods.PUSH push2 = new Mods.PUSH(2.0);
-        Mods.PUSH push3 = new Mods.PUSH(3.0);
+        Push push1 = new Push(1.0);
+        Push push2 = new Push(2.0);
+        Push push3 = new Push(3.0);
 
         push1.execute(context);
         push2.execute(context);
@@ -48,7 +49,7 @@ class ModsPushPopTest {
         context.push(5.0);
         context.push(3.0);
 
-        Mods.POP pop = new Mods.POP();
+        Pop pop = new Pop();
         pop.execute(context);
 
         assertEquals(1, context.stackSize());
@@ -58,10 +59,10 @@ class ModsPushPopTest {
     @Test
     @DisplayName("POP на пустом стеке кидает исключение")
     void testPopOnEmptyStack() {
-        Mods.POP pop = new Mods.POP();
+        Pop pop = new Pop();
 
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
+        InsufficientStackElementsException exception = assertThrows(
+                InsufficientStackElementsException.class,
                 () -> pop.execute(context)
         );
         assertEquals("Стек пуст", exception.getMessage());

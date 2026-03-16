@@ -19,7 +19,7 @@ class ModsDefineTest {
     @Test
     @DisplayName("DEFINE сохраняет переменную")
     void testDefine() {
-        Mods.DEFINE define = new Mods.DEFINE("x", 10.0);
+        Define define = new Define("x", 10.0);
         define.execute(context);
 
         assertEquals(10.0, context.getParameter("x"));
@@ -30,7 +30,7 @@ class ModsDefineTest {
     void testDefineOverwrite() {
         context.define("x", 5.0);
 
-        Mods.DEFINE define = new Mods.DEFINE("x", 20.0);
+        Define define = new Define("x", 20.0);
         define.execute(context);
 
         assertEquals(20.0, context.getParameter("x"));
@@ -39,9 +39,9 @@ class ModsDefineTest {
     @Test
     @DisplayName("Несколько DEFINE сохраняют разные переменные")
     void testMultipleDefines() {
-        Mods.DEFINE define1 = new Mods.DEFINE("a", 1.0);
-        Mods.DEFINE define2 = new Mods.DEFINE("b", 2.0);
-        Mods.DEFINE define3 = new Mods.DEFINE("c", 3.0);
+        Define define1 = new Define("a", 1.0);
+        Define define2 = new Define("b", 2.0);
+        Define define3 = new Define("c", 3.0);
 
         define1.execute(context);
         define2.execute(context);
@@ -55,8 +55,8 @@ class ModsDefineTest {
     @Test
     @DisplayName("DEFINE с одинаковым именем обновляет значение")
     void testDefineUpdate() {
-        Mods.DEFINE define1 = new Mods.DEFINE("x", 10.0);
-        Mods.DEFINE define2 = new Mods.DEFINE("x", 99.0);
+        Define define1 = new Define("x", 10.0);
+        Define define2 = new Define("x", 99.0);
 
         define1.execute(context);
         assertEquals(10.0, context.getParameter("x"));

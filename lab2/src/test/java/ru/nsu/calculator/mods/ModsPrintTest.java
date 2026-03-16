@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.nsu.calculator.CalculatorExceptions.*;
 
 @DisplayName("Тесты для команды PRINT")
 class ModsPrintTest {
@@ -32,7 +33,7 @@ class ModsPrintTest {
     void testPrint() {
         context.push(42.0);
 
-        Mods.PRINT print = new Mods.PRINT();
+        Print print = new Print();
         print.execute(context);
         assertEquals("42.0" + System.lineSeparator(), outputStream.toString());
     }
@@ -42,7 +43,7 @@ class ModsPrintTest {
     void testPrintDoesNotPop() {
         context.push(3.14);
 
-        Mods.PRINT print = new Mods.PRINT();
+        Print print = new Print();
         print.execute(context);
 
         assertFalse(context.stackIsEmpty());
@@ -52,10 +53,10 @@ class ModsPrintTest {
     @Test
     @DisplayName("PRINT на пустом стеке кидает исключение")
     void testPrintOnEmptyStack() {
-        Mods.PRINT print = new Mods.PRINT();
+        Print print = new Print();
 
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
+        InsufficientStackElementsException exception = assertThrows(
+                InsufficientStackElementsException.class,
                 () -> print.execute(context)
         );
         assertEquals("Стек пуст", exception.getMessage());
@@ -67,7 +68,7 @@ class ModsPrintTest {
         context.push(1.0);
         context.push(2.0);
 
-        Mods.PRINT print = new Mods.PRINT();
+        Print print = new Print();
         print.execute(context); // печатает 2.0
         print.execute(context); // печатает 2.0 (снова)
 

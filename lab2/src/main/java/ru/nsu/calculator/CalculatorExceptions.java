@@ -10,16 +10,14 @@ public class CalculatorExceptions {
         private final String commandName;
         private final String rawMessage;
 
-        // Конструктор для команд (Mods.java)
         public CommandExecutionException(String rawMessage, String commandName) {
             super(rawMessage);
             this.rawMessage = rawMessage;
             this.commandName = commandName;
         }
 
-        // Конструктор для "пересборки" в Calculator.java с номером строки
         public CommandExecutionException(String rawMessage, String commandName, int lineNumber) {
-            super(String.format("[Строка %d] '%s' - %s", lineNumber, commandName, rawMessage));
+            super(String.format("Ошибка в строке %d: %s", lineNumber, rawMessage));
             this.rawMessage = rawMessage;
             this.commandName = commandName;
         }
@@ -41,7 +39,7 @@ public class CalculatorExceptions {
 
     public static class CalcNumberFormatException extends CommandExecutionException {
         public CalcNumberFormatException(String val, String cmdName, Throwable cause) {
-            super("Неверный формат числа: " + val, cmdName);
+            super(val + " должен быть числом", cmdName);
             if (cause != null) initCause(cause);
         }
     }

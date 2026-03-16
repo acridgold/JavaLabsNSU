@@ -3,6 +3,8 @@ package ru.nsu.calculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.nsu.calculator.CalculatorExceptions.UnknownCommandException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Тесты CommandFactory")
@@ -61,15 +63,15 @@ class CommandFactoryTest {
     @DisplayName("Ошибки при создании команд")
     void testErrors() {
         assertAll(
-                () -> assertThrows(IllegalArgumentException.class,
+                () -> assertThrows(UnknownCommandException.class,
                         () -> factory.createCommand("")),
-                () -> assertThrows(IllegalArgumentException.class,
+                () -> assertThrows(UnknownCommandException.class,
                         () -> factory.createCommand("UNKNOWN")),
-                () -> assertThrows(IllegalArgumentException.class,
+                () -> assertThrows(CalculatorExceptions.WrongArgumentsCountException.class,
                         () -> factory.createCommand("PUSH")),
-                () -> assertThrows(IllegalArgumentException.class,
+                () -> assertThrows(CalculatorExceptions.WrongArgumentsCountException.class,
                         () -> factory.createCommand("POP 5")),
-                () -> assertThrows(IllegalArgumentException.class,
+                () -> assertThrows(CalculatorExceptions.WrongArgumentsCountException.class,
                         () -> factory.createCommand("DEFINE x"))
         );
     }
@@ -103,6 +105,6 @@ class CommandFactoryTest {
     void testCreateSqrtIllArgExc() {
         CommandFactory factory = new CommandFactory(new Context());
 
-        assertThrows(IllegalArgumentException.class, () -> factory.createCommand("SQRT 42"));
+        assertThrows(CalculatorExceptions.WrongArgumentsCountException.class, () -> factory.createCommand("SQRT 42"));
     }
 }

@@ -2,8 +2,14 @@ package ru.nsu.calculator;
 
 import static ru.nsu.calculator.CalculatorExceptions.*;
 
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+import org.reflections.util.ConfigurationBuilder;
+
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 public class CommandFactory {
@@ -12,19 +18,43 @@ public class CommandFactory {
 
     public CommandFactory(Context context) {
         this.context = context;
-        registerCommand("PUSH", this::createPush);
-        registerCommand("POP", this::createPop);
-        registerCommand("SQRT", this::createSqrt);
-        registerCommand("DEFINE", this::createDefine);
-        registerCommand("PRINT", this::createPrint);
-        registerCommand("+", this::createSimpleMath);
-        registerCommand("-", this::createSimpleMath);
-        registerCommand("*", this::createSimpleMath);
-        registerCommand("/", this::createSimpleMath);
+        loadCommands();
     }
 
-    public void registerCommand(String name, Function<String[], Command> creator) {
-        commands.put(name.toUpperCase(), creator);
+    /**
+    * Загрузка команд из пакета
+     */
+    private void loadCommands() {
+        try {
+            Reflections reflections = new Reflections(new ConfigurationBuilder()
+                    .forPackage("ru.nsu.calculator.mods")
+                    .addScanners(Scanners.SubTypes));
+            Set<Class<? extends Command>> subTypes = reflections.getSubTypesOf(Command.class);
+            for (Class<? extends Command> clazz : subTypes) {
+                try {
+                    Method getNameMethod = clazz.getMethod("getCommandName");
+                    String name = (String) getNameMethod.invoke(null);
+                    Method createMethod = clazz.getMethod("create", String[].class);
+                    commands.put(name.toUpperCase(), args -> {
+                        try {
+                            return (Command) createMethod.invoke(null, (Object) args);
+                        } catch (Exception e) {
+                            Throwable cause = e.getCause();
+                            if (cause instanceof RuntimeException) {
+                                throw (RuntimeException) cause;
+                            } else {
+                                throw new RuntimeException(cause);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    // Без методов -> скип
+                    System.err.println("Failed to load command from class: " + clazz.getName());
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load commands", e);
+        }
     }
 
     public Command createCommand(String inputLine) {
@@ -60,58 +90,5 @@ public class CommandFactory {
             }
             return token;
         }
-    }
-
-    private Command createPush(String[] parts) {
-        if (parts.length != 2) {
-            throw new WrongArgumentsCountException("PUSH", 1, parts.length - 1);
-        }
-        try {
-            double value = Double.parseDouble(parts[1]);
-            return new Mods.PUSH(value);
-        } catch (NumberFormatException e) {
-            throw new CalcNumberFormatException(parts[1], "PUSH", e);
-        }
-    }
-
-    private Command createPop(String[] parts) {
-        if (parts.length != 1) {
-            throw new WrongArgumentsCountException("POP", 0, parts.length - 1);
-        }
-        return new Mods.POP();
-    }
-
-    private Command createSqrt(String[] parts) {
-        if (parts.length != 1) {
-            throw new WrongArgumentsCountException("SQRT", 0, parts.length - 1);
-        }
-        return new Mods.SQRT();
-    }
-
-    private Command createDefine(String[] parts) {
-        if (parts.length != 3) {
-            throw new WrongArgumentsCountException("DEFINE", 2, parts.length - 1);
-        }
-        try {
-            String name = parts[1];
-            double value = Double.parseDouble(parts[2]);
-            return new Mods.DEFINE(name, value);
-        } catch (NumberFormatException e) {
-            throw new CalcNumberFormatException(parts[2], "DEFINE", e);
-        }
-    }
-
-    private Command createPrint(String[] parts) {
-        if (parts.length != 1) {
-            throw new WrongArgumentsCountException("PRINT", 0, parts.length - 1);
-        }
-        return new Mods.PRINT();
-    }
-
-    private Command createSimpleMath(String[] parts) {
-        if (parts.length != 1) {
-            throw new WrongArgumentsCountException(parts[0], 0, parts.length - 1);
-        }
-        return new Mods.Simple_Math(parts[0].charAt(0));
     }
 }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.nsu.calculator.CalculatorExceptions.*;
 
 @DisplayName("Тесты для команды SQRT")
 class ModsSqrtTest {
@@ -21,7 +22,7 @@ class ModsSqrtTest {
     void testSqrtPositive() {
         context.push(16.0);
 
-        Mods.SQRT sqrt = new Mods.SQRT();
+        Sqrt sqrt = new Sqrt();
         sqrt.execute(context);
 
         assertEquals(4.0, context.pop());
@@ -32,7 +33,7 @@ class ModsSqrtTest {
     void testSqrtZero() {
         context.push(0.0);
 
-        Mods.SQRT sqrt = new Mods.SQRT();
+        Sqrt sqrt = new Sqrt();
         sqrt.execute(context);
 
         assertEquals(0.0, context.pop());
@@ -43,22 +44,22 @@ class ModsSqrtTest {
     void testSqrtNegative() {
         context.push(-4.0);
 
-        Mods.SQRT sqrt = new Mods.SQRT();
+        Sqrt sqrt = new Sqrt();
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        NegativeSqrtException exception = assertThrows(
+                NegativeSqrtException.class,
                 () -> sqrt.execute(context)
         );
-        assertEquals("Нельзя взять корень из отрицательного числа", exception.getMessage());
+        assertEquals("Корень из отрицательного числа", exception.getMessage());
     }
 
     @Test
     @DisplayName("SQRT на пустом стеке кидает исключение")
     void testSqrtOnEmptyStack() {
-        Mods.SQRT sqrt = new Mods.SQRT();
+        Sqrt sqrt = new Sqrt();
 
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
+        InsufficientStackElementsException exception = assertThrows(
+                InsufficientStackElementsException.class,
                 () -> sqrt.execute(context)
         );
         assertEquals("Стек пуст", exception.getMessage());
@@ -70,7 +71,7 @@ class ModsSqrtTest {
         context.push(9.0);
         context.push(100.0);
 
-        Mods.SQRT sqrt = new Mods.SQRT();
+        Sqrt sqrt = new Sqrt();
         sqrt.execute(context);
 
         assertEquals(10.0, context.pop());
