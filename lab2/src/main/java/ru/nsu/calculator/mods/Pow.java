@@ -32,7 +32,11 @@ public class Pow implements Command {
             double exponent = Double.parseDouble(args[2]);
             return new Pow(base, exponent);
         } catch (NumberFormatException e) {
-            throw new CalcNumberFormatException(args[1].equals(args[1]) ? args[1] : args[2], "POW", e);
+            throw new CalcNumberFormatException(
+                    args[1] != null && !args[1].isEmpty() ? args[1] : args[2],
+                    "POW",
+                    e
+            );
         }
     }
 }
