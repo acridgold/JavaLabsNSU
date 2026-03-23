@@ -37,4 +37,5 @@ application {
 
 run {
     args = ['src/main/resources/input.txt']
+    systemProperty "java.util.logging.config.file", "src/main/resources/logging.properties"
 }
