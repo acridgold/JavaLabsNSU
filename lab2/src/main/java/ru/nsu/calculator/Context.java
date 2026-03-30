@@ -1,5 +1,7 @@
 package ru.nsu.calculator;
 
+import ru.nsu.calculator.CalculatorExceptions.CalcNumberFormatException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -42,6 +44,18 @@ public class Context {
 
     public Double getParameter(String name) {
         return parameters.get(name);
+    }
+
+    public double resolveNumericToken(String token, String commandName) {
+        try {
+            return Double.parseDouble(token);
+        } catch (NumberFormatException e) {
+            Double value = parameters.get(token);
+            if (value != null) {
+                return value;
+            }
+            throw new CalcNumberFormatException(token, commandName, e);
+        }
     }
 
     public int stackSize() {
