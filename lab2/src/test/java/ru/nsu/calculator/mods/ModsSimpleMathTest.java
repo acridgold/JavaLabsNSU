@@ -99,7 +99,7 @@ class ModsSimpleMathTest {
                 InsufficientStackElementsException.class,
                 () -> add.execute(context)
         );
-        assertEquals("Недостаточно элементов на стеке", exception.getMessage());
+        assertEquals("Стек пуст", exception.getMessage());
 
         // Проверяем, что стек восстановлен
         assertEquals(1, context.stackSize());
@@ -115,7 +115,7 @@ class ModsSimpleMathTest {
                 InsufficientStackElementsException.class,
                 () -> add.execute(context)
         );
-        assertEquals("Недостаточно элементов на стеке", exception.getMessage());
+        assertEquals("Стек пуст", exception.getMessage());
     }
 
     @Test

@@ -16,7 +16,7 @@ class CommandFactoryTest {
     @BeforeEach
     void setUp() {
         context = new Context();
-        factory = new CommandFactory(context);
+        factory = new CommandFactory();
     }
 
     @Test
@@ -103,7 +103,7 @@ class CommandFactoryTest {
     @Test
     @DisplayName("createSqrt() кидает исключение при наличии аргументов")
     void testCreateSqrtIllArgExc() {
-        CommandFactory factory = new CommandFactory(new Context());
+        CommandFactory factory = new CommandFactory();
 
         assertThrows(CalculatorExceptions.WrongArgumentsCountException.class, () -> factory.createCommand("SQRT 42"));
     }

@@ -13,7 +13,7 @@ public class Calculator {
 
     public Calculator() {
         this.context = new Context();
-        this.factory = new CommandFactory(this.context);
+        this.factory = new CommandFactory();
         setupLogging();
     }
 

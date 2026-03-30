@@ -12,10 +12,8 @@ import java.util.function.Function;
 
 public class CommandFactory {
     private final Map<String, Function<String[], Command>> commands = new HashMap<>();
-    private final Context context;
 
-    public CommandFactory(Context context) {
-        this.context = context;
+    public CommandFactory() {
         loadCommands();
     }
 
@@ -38,7 +36,7 @@ public class CommandFactory {
                         continue;
                     }
 
-                    String[] parts = line.split("=");
+                    String[] parts = line.split("=", 2);
                     if (parts.length != 2) {
                         System.err.println("Invalid config line: " + line);
                         continue;
@@ -89,25 +87,6 @@ public class CommandFactory {
             throw new UnknownCommandException(commandName);
         }
 
-        String[] resolvedParts = new String[parts.length];
-        resolvedParts[0] = parts[0];
-        for (int i = 1; i < parts.length; i++) {
-            resolvedParts[i] = resolveValue(parts[i]);
-        }
-
-        return creator.apply(resolvedParts);
-    }
-
-    private String resolveValue(String token) {
-        try {
-            Double.parseDouble(token);
-            return token;
-        } catch (NumberFormatException e) {
-            Double value = context.getParameter(token);
-            if (value != null) {
-                return value.toString();
-            }
-            return token;
-        }
+        return creator.apply(parts);
     }
 }

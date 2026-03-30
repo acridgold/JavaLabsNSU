@@ -20,7 +20,7 @@ class ModsPushPopTest {
     @Test
     @DisplayName("PUSH кладет число на стек")
     void testPush() {
-        Push push = new Push(5.0);
+        Push push = new Push("5");
         push.execute(context);
 
         assertEquals(1, context.stackSize());
@@ -30,9 +30,9 @@ class ModsPushPopTest {
     @Test
     @DisplayName("Несколько PUSH кладут числа в правильном порядке")
     void testMultiplePushes() {
-        Push push1 = new Push(1.0);
-        Push push2 = new Push(2.0);
-        Push push3 = new Push(3.0);
+        Push push1 = new Push("1");
+        Push push2 = new Push("2");
+        Push push3 = new Push("3");
 
         push1.execute(context);
         push2.execute(context);

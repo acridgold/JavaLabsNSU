@@ -46,7 +46,7 @@ public class CalculatorExceptions {
 
     // --- Ошибки состояния ---
     public static class InsufficientStackElementsException extends CommandExecutionException {
-        public InsufficientStackElementsException(String cmdName) { super("Недостаточно элементов на стеке", cmdName); }
+        public InsufficientStackElementsException(String cmdName) { super("Стек пуст", cmdName); }
     }
 
     // --- Арифметика ---
