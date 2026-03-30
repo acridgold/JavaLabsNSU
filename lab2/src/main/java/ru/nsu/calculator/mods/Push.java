@@ -6,15 +6,15 @@ import ru.nsu.calculator.Context;
 import static ru.nsu.calculator.CalculatorExceptions.*;
 
 public class Push implements Command {
-    private final double value;
+    private final String token;
 
-    public Push(double value) {
-        this.value = value;
+    public Push(String token) {
+        this.token = token;
     }
 
     @Override
     public void execute(Context context) {
-        context.push(value);
+        context.push(context.resolveNumericToken(token, getCommandName()));
     }
 
     public static String getCommandName() {
@@ -25,11 +25,6 @@ public class Push implements Command {
         if (args.length != 2) {
             throw new WrongArgumentsCountException("PUSH", 1, args.length - 1);
         }
-        try {
-            double value = Double.parseDouble(args[1]);
-            return new Push(value);
-        } catch (NumberFormatException e) {
-            throw new CalcNumberFormatException(args[1], "PUSH", e);
-        }
+        return new Push(args[1]);
     }
 }

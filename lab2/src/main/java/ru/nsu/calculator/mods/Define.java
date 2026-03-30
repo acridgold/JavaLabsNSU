@@ -6,16 +6,16 @@ import static ru.nsu.calculator.CalculatorExceptions.*;
 
 public class Define implements Command {
     private final String name;
-    private final double value;
+    private final String valueToken;
 
-    public Define(String name, double value) {
+    public Define(String name, String valueToken) {
         this.name = name;
-        this.value = value;
+        this.valueToken = valueToken;
     }
 
     @Override
     public void execute(Context context) {
-        context.define(name, value);
+        context.define(name, context.resolveNumericToken(valueToken, getCommandName()));
     }
 
     public static String getCommandName() {
@@ -26,12 +26,6 @@ public class Define implements Command {
         if (args.length != 3) {
             throw new WrongArgumentsCountException("DEFINE", 2, args.length - 1);
         }
-        try {
-            String name = args[1];
-            double value = Double.parseDouble(args[2]);
-            return new Define(name, value);
-        } catch (NumberFormatException e) {
-            throw new CalcNumberFormatException(args[2], "DEFINE", e);
-        }
+        return new Define(args[1], args[2]);
     }
 }

@@ -2,19 +2,21 @@ package ru.nsu.calculator.mods;
 
 import ru.nsu.calculator.Command;
 import ru.nsu.calculator.Context;
-import ru.nsu.calculator.CalculatorExceptions.*;
+import static ru.nsu.calculator.CalculatorExceptions.*;
 
 public class Pow implements Command {
-    private final double base;
-    private final double exponent;
+    private final String baseToken;
+    private final String exponentToken;
 
-    public Pow(double base, double exponent) {
-        this.base = base;
-        this.exponent = exponent;
+    public Pow(String baseToken, String exponentToken) {
+        this.baseToken = baseToken;
+        this.exponentToken = exponentToken;
     }
 
     @Override
     public void execute(Context context) {
+        double base = context.resolveNumericToken(baseToken, getCommandName());
+        double exponent = context.resolveNumericToken(exponentToken, getCommandName());
         double result = Math.pow(base, exponent);
         context.push(result);
     }
@@ -27,16 +29,6 @@ public class Pow implements Command {
         if (args.length != 3) {
             throw new WrongArgumentsCountException("POW", 2, args.length - 1);
         }
-        try {
-            double base = Double.parseDouble(args[1]);
-            double exponent = Double.parseDouble(args[2]);
-            return new Pow(base, exponent);
-        } catch (NumberFormatException e) {
-            throw new CalcNumberFormatException(
-                    args[1] != null && !args[1].isEmpty() ? args[1] : args[2],
-                    "POW",
-                    e
-            );
-        }
+        return new Pow(args[1], args[2]);
     }
 }
