@@ -1,8 +1,8 @@
 DEFINE a 2
-DEFINE b 4
+DEFINE b 3
 PUSH a
-POW a 3
-POW a 4
-ADD
-ADD
+push b
+push 2
+push 11
+pow
 PRINT
