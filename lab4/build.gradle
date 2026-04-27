@@ -40,10 +40,6 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-test {
-    useJUnitPlatform()
-}
-
 run {
     standardInput = System.in
     systemProperty "java.util.logging.config.file", "src/main/resources/logging.properties"
@@ -51,3 +47,6 @@ run {
             "-Dsun.java2d.uiScale.enabled=true"
 }
 
+test {
+    useJUnitPlatform()
+}
