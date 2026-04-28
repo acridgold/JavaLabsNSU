@@ -111,7 +111,7 @@ public class FactoryApp {
                     try {
                         bodyThread.join();
                         motorThread.join();
-                        for (Thread t : accThreads)    t.join();
+                        for (Thread t : accThreads) t.join();
                         controllerThread.join();
                         for (Thread t : dealerThreads) t.join();
                     } catch (InterruptedException ey) {
