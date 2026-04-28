@@ -108,6 +108,17 @@ public class FactoryApp {
                     controllerThread.interrupt();
                     dealerThreads.forEach(Thread::interrupt);
 
+                    try {
+                        bodyThread.join();
+                        motorThread.join();
+                        for (Thread t : accThreads)    t.join();
+                        controllerThread.join();
+                        for (Thread t : dealerThreads) t.join();
+                    } catch (InterruptedException ey) {
+                        Thread.currentThread().interrupt();
+                    }
+
+
                     frame.dispose();
                     System.exit(0);
                 }

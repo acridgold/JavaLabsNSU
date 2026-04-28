@@ -2,10 +2,11 @@ package ru.nsu.factory.storage;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Storage<T> {
-    private final Deque<T> items = new ArrayDeque<>();
+    private final Queue<T> items = new ArrayDeque<>();
     private final int capacity;
 
     private final AtomicInteger totalProduced = new AtomicInteger(0);
@@ -18,7 +19,7 @@ public class Storage<T> {
         while (items.size() >= capacity) {
             wait();
         }
-        items.addLast(item);
+        items.add(item);
         totalProduced.incrementAndGet();
         notifyAll();
     }
@@ -27,7 +28,7 @@ public class Storage<T> {
         while (items.isEmpty()) {
             wait();
         }
-        T item = items.removeFirst();
+        T item = items.poll();
         notifyAll();
         return item;
     }
