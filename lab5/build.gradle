@@ -1,0 +1,81 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'ru.nsu'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.11.0'
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'junit:junit:4.13.2'
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// Настройки запуска
+tasks.withType(JavaExec).configureEach {
+    classpath = sourceSets.main.runtimeClasspath
+    systemProperty "file.encoding", "UTF-8"
+    jvmArgs "-Dsun.java2d.uiScale=2.0", "-Dfile.encoding=UTF-8"
+}
+
+tasks.register('runClient1', JavaExec) {
+    group = 'application'
+    mainClass = 'chat.client.ChatClient'
+    standardInput = System.in
+}
+
+tasks.register('runClient2', JavaExec) {
+    group = 'application'
+    mainClass = 'chat.client.ChatClient'
+    standardInput = System.in
+}
+
+tasks.register('runServer', JavaExec) {
+    group = 'application'
+    mainClass = 'chat.server.ChatServer'
+    standardInput = System.in
+}
+
+tasks.register('runServerSerialized', JavaExec) {
+    group = 'application'
+    mainClass = 'chat.serialized.ChatServerSerialize'
+    standardInput = System.in
+}
+
+tasks.register('runClient1Serialized', JavaExec) {
+    group = 'application'
+    mainClass = 'chat.serialized.ChatClientSerialize'
+    standardInput = System.in
+}
+
+tasks.register('runClient2Serialized', JavaExec) {
+    group = 'application'
+    mainClass = 'chat.serialized.ChatClientSerialize'
+    standardInput = System.in
+}
+
+runClient1.mustRunAfter runServer
+runClient2.mustRunAfter runServer
+
+application {
+    mainClass = 'chat.server.ChatServer'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
