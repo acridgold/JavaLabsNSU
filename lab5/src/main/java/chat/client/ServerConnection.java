@@ -120,6 +120,10 @@ public class ServerConnection {
                 }
             } catch (IOException e) {
                 if (!closing) notifyError("Соединение потеряно");
+                try {
+                    socket.close();
+                } catch (IOException ignored) {}
+
             }
         });
         reader.setDaemon(true);
