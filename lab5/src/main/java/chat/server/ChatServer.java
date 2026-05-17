@@ -22,14 +22,14 @@ public class ChatServer {
     private volatile ServerSocket serverSocket;
     private final ServerConfig config;
     private final UserRegistry registry;
-    private final ServerLogger logger;
+    private static ServerLogger logger = null;
 
     private final LinkedList<ChatMessage> history = new LinkedList<>();
 
     public ChatServer(ServerConfig config) {
         this.config = config;
         this.registry = new UserRegistry();
-        this.logger = new ServerLogger(config.isLogging());
+        logger = new ServerLogger(config.isLogging());
     }
 
     public void start() throws Exception {
@@ -136,6 +136,7 @@ public class ChatServer {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.err.println("\n[SYSTEM] Остановка...");
+            logger.log("[SYSTEM] Остановка...");
             server.stop();
         }));
 
